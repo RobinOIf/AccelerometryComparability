@@ -1,0 +1,601 @@
+---
+title: "Cut Points"
+author: "Robin Olfermann"
+format: html
+editor: visual
+---
+
+Cut poins calculation with cutpointr:
+
+<https://cran.r-project.org/web/packages/cutpointr/vignettes/cutpointr.html>
+
+<https://arxiv.org/pdf/2002.09209.pdf>
+
+## Packages
+
+```{r}
+
+# packages
+library(tidyverse)
+library(readxl)
+library(plotROC)
+library(randomForest)
+library(cutpointr) 
+library(pROC)
+
+```
+
+## Load Data
+
+```{r}
+data_wide <- read_excel("CutDataWideCPMSec.xlsx")
+
+```
+
+## Defining SB, LPA, MPA, VPA
+
+```{r}
+# conditions
+# SED: 1,2,3,4,5,6,7,8,9,10,11,13,16,18,22
+# LPA: 12,14,15,17,19,20,27,28
+# MPA: 21,23,24,25,26,29,32
+# VPA: 30,31
+
+# SED - LPA
+data_wide$LPA <- as.factor(ifelse(data_wide$condition %in% c(12,14,15,17,19,20,27,28,21,23,24,25,26,29,32,30,31), 0, 1))
+
+
+# LPA - MPA
+data_wide$MPA <- as.factor(ifelse(data_wide$condition %in% c(21,23,24,25,26,29,32,30,31), 0, 1))
+
+# MPA - VPA
+data_wide$VPA <- as.factor(ifelse(data_wide$condition %in% c(30,31), 0, 1))
+
+
+
+# write.csv(data_wide, "data_wide_PA.csv", row.names=FALSE)
+```
+
+# MAI Cut Points
+
+#### ankle
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, movementAcceleration1Hz_right_ankle, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, movementAcceleration1Hz_right_ankle, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, movementAcceleration1Hz_right_ankle, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```
+
+#### chest
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, movementAcceleration1Hz_chest, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, movementAcceleration1Hz_chest, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, movementAcceleration1Hz_chest, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```
+
+#### hip
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, movementAcceleration1Hz_right_side_hip, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, movementAcceleration1Hz_right_side_hip, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, movementAcceleration1Hz_right_side_hip, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+
+```
+
+#### thigh
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, movementAcceleration1Hz_right_thigh, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, movementAcceleration1Hz_right_thigh, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, movementAcceleration1Hz_right_thigh, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+plot(LPA)
+
+```
+
+#### arm
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, movementAcceleration1Hz_right_upper_arm, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, movementAcceleration1Hz_right_upper_arm, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, movementAcceleration1Hz_right_upper_arm, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+
+```
+
+#### wrist
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, movementAcceleration1Hz_right_wrist, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, movementAcceleration1Hz_right_wrist, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, movementAcceleration1Hz_right_wrist, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+
+
+```
+
+# ENMO Cut Points
+
+#### ankle
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, paMetricEnmo1Hz_right_ankle, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, paMetricEnmo1Hz_right_ankle, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, paMetricEnmo1Hz_right_ankle, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```
+
+#### chest
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, paMetricEnmo1Hz_chest, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, paMetricEnmo1Hz_chest, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, paMetricEnmo1Hz_chest, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```
+
+#### hip
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, paMetricEnmo1Hz_right_side_hip, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, paMetricEnmo1Hz_right_side_hip, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, paMetricEnmo1Hz_right_side_hip, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```
+
+#### thigh
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, paMetricEnmo1Hz_right_thigh, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, paMetricEnmo1Hz_right_thigh, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, paMetricEnmo1Hz_right_thigh, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```
+
+#### arm
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, paMetricEnmo1Hz_right_upper_arm, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, paMetricEnmo1Hz_right_upper_arm, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, paMetricEnmo1Hz_right_upper_arm, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```
+
+#### wrist
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, paMetricEnmo1Hz_right_wrist, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, paMetricEnmo1Hz_right_wrist, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, paMetricEnmo1Hz_right_wrist, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```
+
+# MAD Cut Points
+
+#### ankle
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, paMetricMeanAmplitudeDeviation1Hz_right_ankle, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, paMetricMeanAmplitudeDeviation1Hz_right_ankle, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, paMetricMeanAmplitudeDeviation1Hz_right_ankle, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```
+
+#### chest
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, paMetricMeanAmplitudeDeviation1Hz_chest, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, paMetricMeanAmplitudeDeviation1Hz_chest, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, paMetricMeanAmplitudeDeviation1Hz_chest, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```
+
+#### hip
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, paMetricMeanAmplitudeDeviation1Hz_right_side_hip, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, paMetricMeanAmplitudeDeviation1Hz_right_side_hip, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, paMetricMeanAmplitudeDeviation1Hz_right_side_hip, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```
+
+#### thigh
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, paMetricMeanAmplitudeDeviation1Hz_right_thigh, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, paMetricMeanAmplitudeDeviation1Hz_right_thigh, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, paMetricMeanAmplitudeDeviation1Hz_right_thigh, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```
+
+#### arm
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, paMetricMeanAmplitudeDeviation1Hz_right_upper_arm, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, paMetricMeanAmplitudeDeviation1Hz_right_upper_arm, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, paMetricMeanAmplitudeDeviation1Hz_right_upper_arm, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```
+
+#### wrist
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, paMetricMeanAmplitudeDeviation1Hz_right_wrist, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, paMetricMeanAmplitudeDeviation1Hz_right_wrist, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, paMetricMeanAmplitudeDeviation1Hz_right_wrist, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```
+
+# Counts Cut Points
+
+#### ankle
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, paMetricActiCounts_right_ankle, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, paMetricActiCounts_right_ankle, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, paMetricActiCounts_right_ankle, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```
+
+#### chest
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, paMetricActiCounts_chest, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, paMetricActiCounts_chest, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, paMetricActiCounts_chest, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```
+
+#### hip
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, paMetricActiCounts_right_side_hip, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, paMetricActiCounts_right_side_hip, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, paMetricActiCounts_right_side_hip, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```
+
+#### thigh
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, paMetricActiCounts_right_thigh, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, paMetricActiCounts_right_thigh, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, paMetricActiCounts_right_thigh, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```
+
+#### arm
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, paMetricActiCounts_right_upper_arm, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, paMetricActiCounts_right_upper_arm, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, paMetricActiCounts_right_upper_arm, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```
+
+#### wrist
+
+```{r,message=FALSE, warning = FALSE, echo=FALSE}
+# LPA
+LPA <- cutpointr(data_wide, paMetricActiCounts_right_wrist, LPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(LPA)
+
+# MPA
+MPA <- cutpointr(data_wide, paMetricActiCounts_right_wrist, MPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(MPA)
+
+# VPA
+VPA <- cutpointr(data_wide, paMetricActiCounts_right_wrist, VPA, 
+                method = maximize_metric, metric = youden,  direction = ">=", na.rm = TRUE)
+
+summary(VPA)
+```

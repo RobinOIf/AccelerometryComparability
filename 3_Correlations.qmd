@@ -1,0 +1,145 @@
+---
+title: "Metric Correlations"
+author: "Robin Olfermann"
+format: pdf
+editor: visual
+---
+
+```{r, message=FALSE, warning = FALSE, echo=FALSE}
+
+# packages
+library(tidyverse)
+library(readxl)
+library(corrplot)
+
+# load data
+data_wide <- read_excel("CleanDataWide.xlsx")
+```
+
+## All Correlations
+
+```{r, echo =FALSE}
+all.cor <- data_wide %>% select(c(MAI_ankle = movementAcceleration1Hz_right_ankle,
+                                 MAI_chest = movementAcceleration1Hz_chest,
+                                  MAI_hip = movementAcceleration1Hz_right_side_hip,
+                                  MAI_thigh = movementAcceleration1Hz_right_thigh,
+                                  MAI_upper_arm = movementAcceleration1Hz_right_upper_arm,
+                                  MAI_wrist = movementAcceleration1Hz_right_wrist,
+
+                                ENMO_ankle = paMetricEnmo1Hz_right_ankle,
+                                 ENMO_chest = paMetricEnmo1Hz_chest,
+                                 ENMO_hip = paMetricEnmo1Hz_right_side_hip,
+                                 ENMO_thigh = paMetricEnmo1Hz_right_thigh,
+                                 ENMO_upper_arm = paMetricEnmo1Hz_right_upper_arm,
+                                 ENMO_wrist = paMetricEnmo1Hz_right_wrist,
+
+                                MAD_ankle = paMetricMeanAmplitudeDeviation1Hz_right_ankle,
+                                 MAD_chest = paMetricMeanAmplitudeDeviation1Hz_chest,
+                                 MAD_hip = paMetricMeanAmplitudeDeviation1Hz_right_side_hip,
+                                 MAD_thigh = paMetricMeanAmplitudeDeviation1Hz_right_thigh,
+                                 MAD_upper_arm = paMetricMeanAmplitudeDeviation1Hz_right_upper_arm,
+                                 MAD_wrist = paMetricMeanAmplitudeDeviation1Hz_right_wrist,
+
+                                counts_ankle = paMetricActiCounts_right_ankle,
+                                 counts_chest = paMetricActiCounts_chest,
+                                 counts_hip = paMetricActiCounts_right_side_hip,
+                                 counts_thigh = paMetricActiCounts_right_thigh,
+                                 counts_upper_arm = paMetricActiCounts_right_upper_arm,
+                                 counts_wrist = paMetricActiCounts_right_wrist
+                                 ))   %>%   cor(use="pairwise.complete.obs") 
+
+data_round2 <- as.data.frame(all.cor) %>%                   # Using dplyr functions
+  mutate_if(is.numeric,
+            round,
+            digits = 2)
+
+```
+
+```{r, echo =FALSE}
+data_round2 %>%
+  knitr::kable()  
+
+corrplot(all.cor,  tl.cex = .3)
+```
+
+# Correlations per Metric
+
+```{r, echo =FALSE}
+MAI.cor = data_wide %>% select(c(ankle = movementAcceleration1Hz_right_ankle,
+                                 chest = movementAcceleration1Hz_chest,
+                                 hip = movementAcceleration1Hz_right_side_hip,
+                                 thigh = movementAcceleration1Hz_right_thigh,
+                                 upper_arm = movementAcceleration1Hz_right_upper_arm,
+                                 wrist = movementAcceleration1Hz_right_wrist
+                                 ))  %>%  cor(use="pairwise.complete.obs")
+
+ENMO.cor = data_wide %>% select(c(ankle = paMetricEnmo1Hz_right_ankle,
+                                 chest = paMetricEnmo1Hz_chest,
+                                 hip = paMetricEnmo1Hz_right_side_hip,
+                                 thigh = paMetricEnmo1Hz_right_thigh,
+                                 upper_arm = paMetricEnmo1Hz_right_upper_arm,
+                                 wrist = paMetricEnmo1Hz_right_wrist
+                                 ))  %>%  cor(use="pairwise.complete.obs")
+
+MAD.cor = data_wide %>% select(c(ankle = paMetricMeanAmplitudeDeviation1Hz_right_ankle,
+                                 chest = paMetricMeanAmplitudeDeviation1Hz_chest,
+                                 hip = paMetricMeanAmplitudeDeviation1Hz_right_side_hip,
+                                 thigh = paMetricMeanAmplitudeDeviation1Hz_right_thigh,
+                                 upper_arm = paMetricMeanAmplitudeDeviation1Hz_right_upper_arm,
+                                 wrist = paMetricMeanAmplitudeDeviation1Hz_right_wrist
+                                 ))  %>%  cor(use="pairwise.complete.obs")
+
+COUNTS.cor = data_wide %>% select(c(ankle = paMetricActiCounts_right_ankle,
+                                 chest = paMetricActiCounts_chest,
+                                 hip = paMetricActiCounts_right_side_hip,
+                                 thigh = paMetricActiCounts_right_thigh,
+                                 upper_arm = paMetricActiCounts_right_upper_arm,
+                                 wrist = paMetricActiCounts_right_wrist
+                                 ))  %>%  cor(use="pairwise.complete.obs")
+
+
+```
+
+## MAI Correlations
+
+```{r, echo=FALSE}
+as.table(MAI.cor) %>%
+  knitr::kable()  
+
+mean(MAI.cor)
+
+corrplot(MAI.cor,  tl.cex = 1)
+```
+
+## ENMO Correlations
+
+```{r, echo=FALSE}
+as.table(ENMO.cor) %>%
+  knitr::kable()  
+
+mean(ENMO.cor)
+
+corrplot(ENMO.cor,  tl.cex = 1)
+```
+
+## MAD Correlations
+
+```{r, echo=FALSE}
+as.table(MAD.cor) %>%
+  knitr::kable()  
+
+mean(MAD.cor)
+
+corrplot(MAD.cor,  tl.cex = 1)
+```
+
+## Counts Correlations
+
+```{r, echo=FALSE}
+as.table(COUNTS.cor) %>%
+  knitr::kable()  
+
+mean(COUNTS.cor)
+
+corrplot(COUNTS.cor,  tl.cex = 1)
+```
